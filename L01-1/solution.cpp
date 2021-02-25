@@ -8,38 +8,83 @@
  * ---------------------------------------------------
  */
 
-/*
- * Introduce el nombre y apellidos de los/as componentes del grupo:
- *
- * Estudiante 1: 
- * Estudiante 2:
- *
- */
- 
+ /*
+  * Introduce el nombre y apellidos de los/as componentes del grupo:
+  *
+  * Estudiante 1:
+  * Estudiante 2:
+  *
+  */
+
 #include <iostream>
 #include <cassert>
 #include <fstream>
+using namespace std;
 
-
+const int GRADO_MAX = 10000;
 /* Define la clase 'Polinomio' aquí */
+class Polinomio {
+public:
+	//Constructor
+	Polinomio() {
+		//Inicializamos el array a 0
+		for (int i = 0; i < GRADO_MAX + 1; i++) {
+			coeficientes[i] = 0;
+		}
+	}
 
+	//Metodos
+
+	void anyadir_monomio(int coef, int exp) {
+		this->coeficientes[exp] += coef;
+	}
+	long evaluar(int valor) {
+		long suma = 1;
+		long pot = 0;
+		for (int i = 0; i < GRADO_MAX + 1; i++) {
+			long valor = pot * this->coeficientes[i];
+			suma += valor;
+			pot++;
+		}
+		return suma;
+	}
+
+
+private:
+	int coeficientes[GRADO_MAX + 1];
+
+
+};
 
 bool tratar_caso() {
+	int n, v;
+	cin >> n >> v;
+	if (n == 0 && v == 0)
+		return false;
+	Polinomio p;
+	int coef, exp;
+	for (int i = 0; i < 2 * n; ++i) {
+		cin >> coef >> exp;
+		p.anyadir_monomio(coef, exp);
+	}
+	cout << p.evaluar(v) << endl;
 
+
+	return true;
 
 }
 
 int main() {
 #ifndef DOMJUDGE
-  std::ifstream in("sample.in");
-  auto cinbuf = std::cin.rdbuf(in.rdbuf());
+	std::ifstream in("sample.in");
+	auto cinbuf = std::cin.rdbuf(in.rdbuf());
 #endif
 
-  while (tratar_caso()) { }
-  
+	while (tratar_caso()) {}
+
 #ifndef DOMJUDGE
-  std::cin.rdbuf(cinbuf);
-  system("PAUSE");
+	std::cin.rdbuf(cinbuf);
+	system("PAUSE");
 #endif
-  return 0;
+	return 0;
 }
