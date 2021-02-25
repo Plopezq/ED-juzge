@@ -39,11 +39,13 @@ public:
 		this->coeficientes[exp] += coef;
 	}
 	long evaluar(int valor) {
-		long suma = 1;
-		long pot = 0;
-		for (int i = 0; i < GRADO_MAX + 1; i++) {
-			long valor = pot * this->coeficientes[i];
-			suma += valor;
+		long suma = this->coeficientes[0];
+		long pot = 1;
+		long acum = valor;
+		for (int i = 1; i < GRADO_MAX + 1; i++) {
+			long aux = acum * this->coeficientes[i];
+			suma += aux;
+			acum = acum * valor;
 			pot++;
 		}
 		return suma;
@@ -52,6 +54,7 @@ public:
 
 private:
 	int coeficientes[GRADO_MAX + 1];
+	int max_exp;
 
 
 };
@@ -63,7 +66,7 @@ bool tratar_caso() {
 		return false;
 	Polinomio p;
 	int coef, exp;
-	for (int i = 0; i < 2 * n; ++i) {
+	for (int i = 0; i < n; ++i) {
 		cin >> coef >> exp;
 		p.anyadir_monomio(coef, exp);
 	}
