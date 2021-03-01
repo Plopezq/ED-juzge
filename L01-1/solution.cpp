@@ -11,8 +11,8 @@
  /*
   * Introduce el nombre y apellidos de los/as componentes del grupo:
   *
-  * Estudiante 1:
-  * Estudiante 2:
+  * Estudiante 1: Pablo Lopez Martin
+  * Estudiante 2: Alejandro Casado Benito
   *
   */
 
@@ -26,6 +26,11 @@ const int GRADO_MAX = 10000;
 class Polinomio {
 public:
 	//Constructor
+	
+	/*
+	* COSTE constructor --> El coste es lineal respecto al grado maximo
+	*	O(GRADO_MAX)
+	*/
 	Polinomio() {
 		//Inicializamos el array a 0
 		for (int i = 0; i < GRADO_MAX + 1; i++) {
@@ -34,10 +39,17 @@ public:
 	}
 
 	//Metodos
-
+	/*
+	* COSTE anyadir_monomio --> El coste es constante ya que son operaciones aritméticas
+	*	O(1)
+	*/
 	void anyadir_monomio(int coef, int exp) {
 		this->coeficientes[exp] += coef;
 	}
+	/*
+	* COSTE evaluar --> El coste es lineal respecto al grado maximo
+	*	O(GRADO_MAX)
+	*/
 	long evaluar(int valor) {
 		long suma = this->coeficientes[0];
 		long pot = 1;
