@@ -142,6 +142,9 @@
     <None Include="sample.ans" />
     <None Include="sample.in" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="solution.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
