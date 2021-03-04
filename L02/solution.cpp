@@ -217,9 +217,8 @@ void ListLinkedSingle::intersect(const ListLinkedSingle &other) {
     Node *currentOther = other.head;
 
     while (currentOther->next != nullptr) {
-        //Si alguna lista es vacia
-
-
+        //Comprobamos que this no es vacia
+        assert(head != nullptr);
         //
         if (currentOther->value > currentThis->value) { 
             //Tenemos que mover currentThis
@@ -238,6 +237,8 @@ void ListLinkedSingle::intersect(const ListLinkedSingle &other) {
             //Aumentamos currentThis
             currentOther = currentOther->next;
         }
+        //Eliminar los nodos sobrantes en this, en caso de que haya
+
     }
 
 
