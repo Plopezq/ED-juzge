@@ -1,2 +1,2 @@
 # ED
-Repository for Estructura de Datos asignature
+Estructura de Datos subject 2019-2020 - DomJuzge
