@@ -222,6 +222,7 @@ void ListLinkedSingle::intersect(const ListLinkedSingle &other) {
         //
         if (currentOther->value > currentThis->value) { 
             //Tenemos que mover currentThis
+            //Y eliminarlo ya que no es comun a los dos
             Node* oldCurrent = currentThis;
             currentThis = currentThis->next;
             delete oldCurrent;
@@ -237,9 +238,9 @@ void ListLinkedSingle::intersect(const ListLinkedSingle &other) {
             //Aumentamos currentThis
             currentOther = currentOther->next;
         }
-        //Eliminar los nodos sobrantes en this, en caso de que haya
-
     }
+    //Eliminar los nodos sobrantes en this, en caso de que haya, 
+    // con un contador en el bucle anterior (while)
 
 
 }
