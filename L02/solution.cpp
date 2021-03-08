@@ -210,24 +210,22 @@ void ListLinkedSingle::display(std::ostream &out) const {
 //@ <answer>
 /*
 *
-* En el caso peor, la funcion intersect tendria el O(n*m) siendo n num elemtnos de la lista this
-* y m el numero de elementos comunes a ambas
+* En el caso peor, la funcion intersect tendria el O(n) siendo n el numero de elementos
+* de la lista mas larga
 * 
 */
 // Implementa a continuación el método pedido.
 void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
     // Completar aquí
     Node* curThis = this->head;
-    Node* prevThis = nullptr;
-    Node* result = nullptr;
     Node* curOther = other.head;
+    Node* prevThis = nullptr;
     bool primera = true;
-
-    while (curThis->next != nullptr) {
+    while (curThis != nullptr && curOther!= nullptr) {
         if (curOther->value > curThis->value) {
-            //Node* oldCurrent = curThis;
+            Node* old = curThis;
             curThis = curThis->next;
-            //delete oldCurrent;
+            delete old;
         }
         else if (curOther->value < curThis->value) {
             curOther = curOther->next;
@@ -236,26 +234,25 @@ void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
             if (primera) {
                 this->head = curThis;
                 prevThis = curThis;
-                curThis = curThis->next;
-                curOther = curOther->next;
-                //this->head->next = nullptr;
+                curThis = curThis->next; //Movemos
+                curOther = curOther->next; //Movemos
                 primera = false;
             }
             else {
-                //this->push_back(curThis->value);
-                //El coste del metodo push_back es O(n) siendo n el numero de elementos comunes
                 prevThis->next = curThis;
+                prevThis = curThis;
                 curThis = curThis->next;
                 curOther = curOther->next;
             }
+
         }
     }
-    if (primera) { //No se encuentra ningun valor igual, dejamos la
-        // lista interseccion como vacia
+
+    if (prevThis != nullptr) prevThis->next = nullptr;
+    if (primera) {
         this->head = nullptr;
     }
 }
-
 using namespace std;
 
 
