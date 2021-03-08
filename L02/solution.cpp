@@ -218,12 +218,16 @@ void ListLinkedSingle::display(std::ostream &out) const {
 void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
     // Completar aquí
     Node* curThis = this->head;
+    Node* prevThis = nullptr;
+    Node* result = nullptr;
     Node* curOther = other.head;
     bool primera = true;
 
-    while (curThis != nullptr) {
+    while (curThis->next != nullptr) {
         if (curOther->value > curThis->value) {
+            //Node* oldCurrent = curThis;
             curThis = curThis->next;
+            //delete oldCurrent;
         }
         else if (curOther->value < curThis->value) {
             curOther = curOther->next;
@@ -231,14 +235,16 @@ void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
         else {
             if (primera) {
                 this->head = curThis;
+                prevThis = curThis;
                 curThis = curThis->next;
                 curOther = curOther->next;
-                this->head->next = nullptr;
+                //this->head->next = nullptr;
                 primera = false;
             }
             else {
-                this->push_back(curThis->value);
+                //this->push_back(curThis->value);
                 //El coste del metodo push_back es O(n) siendo n el numero de elementos comunes
+                prevThis->next = curThis;
                 curThis = curThis->next;
                 curOther = curOther->next;
             }
@@ -248,7 +254,6 @@ void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
         // lista interseccion como vacia
         this->head = nullptr;
     }
-
 }
 
 using namespace std;
@@ -264,6 +269,7 @@ void tratar_caso() {
         cin >> aux;
         thisLista.push_back(aux);
     }
+    cin >> numNodos;
     ListLinkedSingle otherLista;
     for (int i = 0; i < numNodos; i++) {
         int aux = -1;
