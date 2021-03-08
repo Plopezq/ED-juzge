@@ -18,8 +18,8 @@
 /*
  * Introduce el nombre y apellidos de los/as componentes del grupo:
  *
- * Estudiante 1: Alejandro Casado
- * Estudiante 2: Pablo Lopez
+ * Estudiante 1: Alejandro Casado Benito
+ * Estudiante 2: Pablo Lopez Martin
  *
  */
 //@ </answer>
@@ -208,40 +208,46 @@ void ListLinkedSingle::display(std::ostream &out) const {
 
 // ----------------------------------------------------------------
 //@ <answer>
-
+/*
+*
+* En el caso peor, la funcion intersect tendria el O(n*m) siendo n num elemtnos de la lista this
+* y m el numero de elementos comunes a ambas
+* 
+*/
 // Implementa a continuación el método pedido.
+void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
+    // Completar aquí
+    Node* curThis = this->head;
+    Node* curOther = other.head;
+    bool primera = true;
 
-void ListLinkedSingle::intersect(const ListLinkedSingle &other) {
-  // Completar aquí
-    Node *currentThis = this->head; //Puntero a la posicion actual de la lista this
-    Node *currentOther = other.head;
-
-    while (currentOther->next != nullptr) {
-        //Comprobamos que this no es vacia
-        assert(head != nullptr);
-        //
-        if (currentOther->value > currentThis->value) { 
-            //Tenemos que mover currentThis
-            //Y eliminarlo ya que no es comun a los dos
-            Node* oldCurrent = currentThis;
-            currentThis = currentThis->next;
-            delete oldCurrent;
+    while (curThis != nullptr) {
+        if (curOther->value > curThis->value) {
+            curThis = curThis->next;
         }
-        if (currentOther->value < currentThis->value) {
-            //Tenemos que mover currentOther
-            //En other no se elimina nada
-            currentOther = currentOther->next;
+        else if (curOther->value < curThis->value) {
+            curOther = curOther->next;
         }
         else {
-            //Aumentamos currentOther
-            currentThis = currentThis->next;
-            //Aumentamos currentThis
-            currentOther = currentOther->next;
+            if (primera) {
+                this->head = curThis;
+                curThis = curThis->next;
+                curOther = curOther->next;
+                this->head->next = nullptr;
+                primera = false;
+            }
+            else {
+                this->push_back(curThis->value);
+                //El coste del metodo push_back es O(n) siendo n el numero de elementos comunes
+                curThis = curThis->next;
+                curOther = curOther->next;
+            }
         }
     }
-    //Eliminar los nodos sobrantes en this, en caso de que haya, 
-    // con un contador en el bucle anterior (while)
-
+    if (primera) { //No se encuentra ningun valor igual, dejamos la
+        // lista interseccion como vacia
+        this->head = nullptr;
+    }
 
 }
 
@@ -266,6 +272,7 @@ void tratar_caso() {
     }
     //interseccion y output
     thisLista.intersect(otherLista);
+    cout << endl;
 
     thisLista.display();
 
