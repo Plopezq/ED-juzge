@@ -226,7 +226,7 @@ void ListLinkedDouble::detach(Node *node) {
   
     node->prev->next = node->next;
     node->next->prev = node->prev;
-
+    num_elems--;
     //¿Hacemos algo co el nuestro? -> NO
 }
 //El coste de la funcion attach es constante, O(1)
@@ -238,19 +238,24 @@ void ListLinkedDouble::attach(Node *node, Node *position) {
 
     node->next = position;
     node->prev = old_prev;
+    num_elems++;
 }
-
+//El coste de la funcion partition es lineal con respecto a num_elems O(num_elems)
 void ListLinkedDouble::partition(int pivot) {
   //[5,10,9,7,4,6] ---> [5,7,4,6,10,9]
     
     Node* prev = head->next;//Primer nodo a tratar
-    Node* iterator = head->next;
-    while (iterator != head) {
-        if (iterator->value > pivot) { //Se va al final
-            detach(iterator);
-            attach(iterator, head);
-        }//else { //Se queda
-        iterator = iterator->next;
+    Node* old_prev;
+    for (int i = 0; i < num_elems; i++) {
+        if (prev->value > pivot) { //Se va al final
+            old_prev = prev->next;
+            detach(prev);
+            attach(prev, head);
+            prev = old_prev;
+        }
+        else {
+            prev = prev->next;
+        }
     }
 }
 
