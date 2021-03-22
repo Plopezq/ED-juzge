@@ -4,25 +4,25 @@
  * ---------------------------------------------------
  */
 
-/*
- * MUY IMPORTANTE: Para realizar este ejercicio solo podÃ©is
- * modificar el cÃ³digo contenido entre las etiquetas <answer>
- * y </answer>. Toda modificaciÃ³n fuera de esas etiquetas no serÃ¡
- * corregida.
- *
- * Tampoco esta permitido modificar las lÃ­neas que contienen
- * las etiquetas <answer> y </answer>, obviamente :-)
- */
+ /*
+  * MUY IMPORTANTE: Para realizar este ejercicio solo podéis
+  * modificar el código contenido entre las etiquetas <answer>
+  * y </answer>. Toda modificación fuera de esas etiquetas no será
+  * corregida.
+  *
+  * Tampoco esta permitido modificar las líneas que contienen
+  * las etiquetas <answer> y </answer>, obviamente :-)
+  */
 
-//@ <answer>
-/*
- * Introduce el nombre y apellidos de los/as componentes del grupo:
- *
- * Estudiante 1: Pablo Lopez Martin
- * Estudiante 2: Alejandro Casado Benito
- *
- */
-//@ </answer>
+  //@ <answer>
+  /*
+   * Introduce el nombre y apellidos de los/as componentes del grupo:
+   *
+   * Estudiante 1: Pablo Lopez Martin
+   * Estudiante 2: Alejandro Casado Benito
+   *
+   */
+   //@ </answer>
 
 #include <iostream>
 #include <cassert>
@@ -30,18 +30,18 @@
 
 using namespace std;
 
-// Puedes copiar aquÃ­ algunas de las implementaciones de los TADs vistos esta semana:
+// Puedes copiar aquí algunas de las implementaciones de los TADs vistos esta semana:
 
 // Pilas: https://github.com/manuelmontenegro/ED-2021/blob/master/lineales/stack_array/stack_array.h
 // Colas: https://github.com/manuelmontenegro/ED-2021/blob/master/lineales/queue_array/queue_array.h
 // Colas dobles: https://github.com/manuelmontenegro/ED-2021/blob/master/lineales/deque/dequeue.h
 
-// En caso de utilizar alguno de los TADs anteriores, ha de copiarse TAL CUAL, sin realizar ningÃºn cambio
-// en sus implementaciones. Para facilitar la correcciÃ³n, coloca la implementaciÃ³n de estos TADs fuera
-// de las etiquetas <answer> y </answer>. El profesor asumirÃ¡ que tienen la misma implementaciÃ³n que la
-// vista en teorÃ­a.
+// En caso de utilizar alguno de los TADs anteriores, ha de copiarse TAL CUAL, sin realizar ningún cambio
+// en sus implementaciones. Para facilitar la corrección, coloca la implementación de estos TADs fuera
+// de las etiquetas <answer> y </answer>. El profesor asumirá que tienen la misma implementación que la
+// vista en teoría.
 
-// Alternativamente, puedes utilizar las clases de la librerÃ­a estÃ¡ndar de C++ (stack<T>, queue<T> y deque<T>).
+// Alternativamente, puedes utilizar las clases de la librería estándar de C++ (stack<T>, queue<T> y deque<T>).
 
 #ifndef __STACK_ARRAY_H
 #define __STACK_ARRAY_H
@@ -133,47 +133,64 @@ StackArray<T>& StackArray<T>::operator=(const StackArray<T>& other) {
 #endif
 // ----------------------------------------------------------------
 //@ <answer>
+/*
+    La idea de resolver el problema es mediante una pila, en ella apilaremos los pilares que sigan valiendo,
+    es decir, que se puede saltar desde ellos a otro pilar mas adelante. En el momento en que encontremos un
+    pilar mayor que el primero en la pila (el top) iremos desapilando hasta que vuelva a ser válido.
+
+    El coste en el caso peor es lineal respecto al numero de pilares O(numPilares)
+
+*/
 bool tratar_caso() {
-    StackArray<int> pila(100);
+    StackArray<int> pila;
 
     int num;
     cin >> num;
+    if (num == -1) {
+        return false;
+    }
     pila.push(num); //Primer caso
     cout << "NO HAY" << endl;
+    cin >> num;
     while (num != -1) {
-        cin >> num;
         if (pila.top() > num) {
             cout << pila.top() << endl;
             pila.push(num);
         }
         else { //pila.top() < num
-            while (pila.top() < num) {
+            while (!pila.empty() && pila.top() <= num) {
                 pila.pop();
             }
-            cout << pila.top() << endl;
+            if (pila.empty()) { // en el caso de q vaciemos la pila
+                cout << "NO HAY" << endl;
+            }
+            else {
+                cout << pila.top() << endl;
+            }
             pila.push(num);
         }
+        cin >> num;
     }
-    
+    cout << "---\n";
     return true;
 }
 
 //@ </answer>
 
-// Â¡No modificar nada debajo de esta lÃ­nea!
+// ¡No modificar nada debajo de esta línea!
 // ----------------------------------------------------------------
 
 int main() {
 #ifndef DOMJUDGE
-  std::ifstream in("sample.in");
-  auto cinbuf = std::cin.rdbuf(in.rdbuf());
+    std::ifstream in("sample.in");
+    auto cinbuf = std::cin.rdbuf(in.rdbuf());
 #endif
 
-  while (tratar_caso()) { }
+    while (tratar_caso()) {}
 
 #ifndef DOMJUDGE
-  std::cin.rdbuf(cinbuf);
-  system("PAUSE");
+    std::cin.rdbuf(cinbuf);
+    system("PAUSE");
 #endif
-  return 0;
+    return 0;
 }
