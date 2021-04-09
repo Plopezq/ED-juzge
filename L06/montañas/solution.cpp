@@ -19,8 +19,8 @@
 /*
  * Introduce el nombre y apellidos de los/as componentes del grupo:
  *
- * Estudiante 1: 
- * Estudiante 2:
+ * Estudiante 1: Alejandro Casado Benito
+ * Estudiante 2: Pablo López Martín
  *
  */
 //@ </answer>
@@ -130,36 +130,59 @@ using namespace std;
 // Puedes definir las funciones auxiliares que necesites, pero siempre
 // entre las marcas <answer> y </answer>
 
+ /*
+    El coste de la funcion diam_altura es:
+
+    siendo n el numero de nodos del arbol.
+
+    T(n) =  
+            caso base           n = 0    k1
+
+            caso recursivo      n > 0  T(ni) + T(nd) + k2
+
+            siendo ni el tamaño del hijo izquierdo y nd el hijo derecho.
+ 
+ 
+ */
 //@ <answer>
- //Definimos la funcion contar nodos
-int diam_Altu(const BinTree<int>& montanya) {
-    if (montanya.empty()) return 0;
+
+
+pair<int,int> diam_altura(const BinTree<int>& montanya) {
+    if (montanya.empty()) {
+      
+        return { 0,0 };
+    }
     else {
+        int  alt,d;
+        pair<int, int> altIz_dia, altDr_dia;
+        altIz_dia = diam_altura(montanya.left());
+        altDr_dia = diam_altura(montanya.right());
+        alt = 1 + max(altIz_dia.second,altDr_dia.second);
+        d = altIz_dia.first + altDr_dia.first + 1;
         
-        return 1 + std::max(diam_Altu(montanya.left()), diam_Altu(montanya.right()));
-
+        return { alt, max(altIz_dia.first, max(altDr_dia.first, d)) };
     }
 }
-int diam(const BinTree<int>& montanya) {
-    if (montanya.empty()) return 0;
-    else {
 
-        int altIz = diam_Altu(montanya.left());
-        int altDr = diam_Altu(montanya.right());
-        return 1 + altIz + altDr;
 
-    }
-}
+
+
+
 int max_hitos_visitados(const BinTree<int> &montanya) {
-  // Implementar
-    int altDr = diam_Altu(montanya.right());
-    int altIz = diam_Altu(montanya.left());
-    cout << altDr << " " << altIz;
-    int dia = diam(montanya.left());
-    int dimaIz = diam(montanya.right());
 
-    cout << "DIAM" << dia << " " << dimaIz;
-    return 0;
+    int altIz, altDr, alt;
+    int d;
+    pair<int, int> aIz, aDr;
+    
+    aIz= diam_altura(montanya.left());
+    aDr = diam_altura(montanya.right());
+    d = 1 + aIz.first + aDr.first;
+
+
+    
+
+    
+   return max(aIz.second, max(aDr.second,d));
 }
 
 // Indica aquí el coste del algoritmo y las recurrencias planteadas en
