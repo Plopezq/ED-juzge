@@ -148,6 +148,9 @@ using namespace std;
 
 
 pair<int,int> diam_altura(const BinTree<int>& montanya) {
+
+    //first altura
+    // second diametro
     if (montanya.empty()) {
       
         return { 0,0 };
@@ -157,10 +160,12 @@ pair<int,int> diam_altura(const BinTree<int>& montanya) {
         pair<int, int> altIz_dia, altDr_dia;
         altIz_dia = diam_altura(montanya.left());
         altDr_dia = diam_altura(montanya.right());
-        alt = 1 + max(altIz_dia.second,altDr_dia.second);
-        d = altIz_dia.first + altDr_dia.first + 1;
+        alt = 1 + max(altIz_dia.first,altDr_dia.first);
+        d = altIz_dia.first+ altDr_dia.first + 1; // diametro del arbol completo pasando por la raiz
         
-        return { alt, max(altIz_dia.first, max(altDr_dia.first, d)) };
+        return{ alt,
+                max(altIz_dia.second,max(altDr_dia.second,d)) // diametro
+                };
     }
 }
 
@@ -173,7 +178,9 @@ int max_hitos_visitados(const BinTree<int> &montanya) {
     int altIz, altDr, alt;
     int d;
     pair<int, int> aIz, aDr;
-    
+
+    //first altura
+    // second diametro
     aIz= diam_altura(montanya.left());
     aDr = diam_altura(montanya.right());
     d = 1 + aIz.first + aDr.first;
