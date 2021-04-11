@@ -146,43 +146,36 @@ using namespace std;
  */
 //@ <answer>
 
-
-pair<int,int> diam_altura(const BinTree<int>& montanya) {
+//Devuelve un par altura-diametro
+pair<int,int> altura_diam(const BinTree<int>& montanya) {
     if (montanya.empty()) {
       
         return { 0,0 };
     }
     else {
         int  alt,d;
-        pair<int, int> altIz_dia, altDr_dia;
-        altIz_dia = diam_altura(montanya.left());
-        altDr_dia = diam_altura(montanya.right());
-        alt = 1 + max(altIz_dia.second,altDr_dia.second);
-        d = altIz_dia.first + altDr_dia.first + 1;
+        pair<int, int> altDia_izq, altDia_der;
+        altDia_izq = altura_diam(montanya.left());
+        altDia_der = altura_diam(montanya.right());
+        alt = 1 + max(altDia_izq.second, altDia_der.second);
+        d = altDia_izq.first + altDia_der.first + 1;
         
-        return { alt, max(altIz_dia.first, max(altDr_dia.first, d)) };
+        //return { alt, max(altDia_izq.first, max(altDia_der.first, d)) };
+        return { alt, d };
     }
 }
 
 
-
-
-
 int max_hitos_visitados(const BinTree<int> &montanya) {
 
-    int altIz, altDr, alt;
     int d;
-    pair<int, int> aIz, aDr;
+    pair<int, int> a_dimIz, a_dimDr;
     
-    aIz= diam_altura(montanya.left());
-    aDr = diam_altura(montanya.right());
-    d = 1 + aIz.first + aDr.first;
+    a_dimIz= altura_diam(montanya.left());
+    a_dimDr = altura_diam(montanya.right());
+    d = 1 + a_dimIz.first + a_dimDr.first;
 
-
-    
-
-    
-   return max(aIz.second, max(aDr.second,d));
+   return max(a_dimIz.second, max(a_dimDr.second,d));
 }
 
 // Indica aquí el coste del algoritmo y las recurrencias planteadas en
