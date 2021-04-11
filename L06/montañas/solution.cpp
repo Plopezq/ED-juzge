@@ -131,16 +131,20 @@ using namespace std;
 // entre las marcas <answer> y </answer>
 
  /*
-    El coste de la funcion diam_altura es:
+    El coste de la funcion max_hitos_visitados es:
 
     siendo n el numero de nodos del arbol.
 
     T(n) =  
             caso base           n = 0    k1
 
-            caso recursivo      n > 0  T(ni) + T(nd) + k2
+            caso recursivo      n > 0  T(ni) + T(nd) + k2   
 
-            siendo ni el tamaño del hijo izquierdo y nd el hijo derecho.
+            siendo ni el tamaño del hijo izquierdo y nd el hijo derecho. k2 son el resto de operaciones constantes
+
+            Por tanto T(n) = O(n) siendo n el número de nodos.
+
+    Esta recursividad es tanto para árboles equilibrados como degenerados, porque los nodos se recorren solo una única vez.
  
  
  */
