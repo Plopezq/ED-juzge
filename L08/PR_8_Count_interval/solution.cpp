@@ -21,8 +21,8 @@
 /*
  * Introduce el nombre y apellidos de los/as componentes del grupo:
  *
- * Estudiante 1:
- * Estudiante 2:
+ * Estudiante 1: Alejandro Casado Benito
+ * Estudiante 2: Pablo López Martín
  *
  */
 //@ </answer>
@@ -30,6 +30,7 @@
 #include <iostream>
 #include <cassert>
 #include <fstream>
+#include <vector>
 
 template <typename T> class SetTree {
 public:
@@ -76,6 +77,8 @@ public:
   
   // Nuevo método a implementar. La implementación se encuentra más adelante.
   int count_interval(const T &lower, const T &upper) const;
+
+
 
 private:
   struct Node {
@@ -179,6 +182,7 @@ private:
   }
 
   static void display(Node *root, std::ostream &out) {
+   
     if (root != nullptr) {
       if (root->left != nullptr) {
         display(root->left, out);
@@ -191,6 +195,9 @@ private:
       }
     }
   }
+  //Metodo auxiliar
+  int count_interval_2(const Node* root, const T& lower, const T& upper) const;
+
 };
 
 template <typename T>
@@ -209,11 +216,17 @@ using namespace std;
 // Implementa a continuación el método pedido
 // ¡No te olvides de indicar el coste!
 //
+/*
+    El coste en tiempo es del O(n) siendo el numero de elementos del conjunto, es decir cuando el 
+    intervalo [lower, upper] engloba todo el conjunto.
 
+*/
 
 template <typename T>
 int SetTree<T>::count_interval(const T &lower, const T &upper) const {
   // ...
+   return count_interval_2(this->root_node, lower, upper);
+
 }
 
 // 
@@ -224,7 +237,35 @@ int SetTree<T>::count_interval(const T &lower, const T &upper) const {
 
 // ... Métodos auxiliares ...
 
+template <typename T>
+int SetTree<T>::count_interval_2(const Node* root, const T& lower, const T& upper) const {
+    // ...
+    int cont = 0;
 
+    if (root != nullptr) {
+       
+        if (lower > root->elem) {
+            if (upper > root->elem)
+                cont += count_interval_2(root->right, lower, upper);
+        }
+        else if (lower <= root->elem) {
+            if (upper >= root->elem) {
+                cont += count_interval_2(root->left, lower, upper) + 1;
+                if (root != nullptr)
+                    cont += count_interval_2(root->right, lower, upper) + 1;
+
+            }
+            else
+                cont += count_interval_2(root->left, lower, upper);
+        }
+       
+    }
+
+    //return (cont_dr + cont_iz);
+    return cont;
+
+    //return 0;
+}
 // 
 // Implementa a continuación la función que trata un caso de prueba.
 //
@@ -236,8 +277,25 @@ bool tratar_caso() {
   if (cin.eof()) {
     return false;
   }
+  SetTree<int> result;
+  int aux;
+  for (int i = 0; i < num_elems; i++) {
+      cin >> aux;
+      result.insert(aux);
+  }
 
-  // Continuar aquí...
+  int lower, upper;
+  for (int i = 0; i < num_consultas; i++) {
+ 
+      cin >> lower >> upper;
+      int m = result.count_interval(lower, upper);
+      cout << m / 2;
+      cout << '\n';
+  }
+
+  cout << "---\n";
+
+
   
   return true;
 }
