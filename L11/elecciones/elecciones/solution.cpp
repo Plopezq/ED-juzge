@@ -28,64 +28,71 @@ using namespace std;
 
 class ConteoVotos {
 public:
+    /*
+          E -> numero de estados
+
+          P -> resultados, num Partidos distintos entre todos los estados
+    */ 
+
+  //coste:  O(1)
   void nuevo_estado(const string &nombre, int num_compromisarios) {
     // Completar
-      if (estados.count(nombre)) {//si esta lanzamos error
+      if (estados.count(nombre)) {//si esta lanzamos error O(1)
           throw std::domain_error("Estado ya existente");
       }
-      estados[nombre].compromisarios = num_compromisarios;
+      estados[nombre].compromisarios = num_compromisarios; // O(1)
      
   }
 
+  //coste: O(log P)
   void sumar_votos(const string &estado, const string &partido, int num_votos) {
     // Completar
-      infoEstado& info = bucar_estado(estado);
+      infoEstado& info = bucar_estado(estado); //O(1)
     
-      if (info.partidos.count(partido)) {
-          info.partidos[partido] += num_votos;
-         
-
+      if (info.partidos.count(partido)) { // O(log P)
+          info.partidos[partido] += num_votos; // O(log P)
       }
       else {
-          info.partidos[partido] = num_votos;
+          info.partidos[partido] = num_votos; // O(log P)
       }
       //Actualizamos el ganador
       if (info.partidos[partido] > info.ganador.second) {
 
-          if (resultado.count(info.ganador.first)) {
-              resultado[info.ganador.first] -= info.compromisarios;
-              if (resultado[info.ganador.first] == 0) {
-                  resultado.erase(info.ganador.first);
+          if (resultado.count(info.ganador.first)) { // O(log P)
+              resultado[info.ganador.first] -= info.compromisarios; // O(log P)
+              if (resultado[info.ganador.first] == 0) { // O(log P)
+                  resultado.erase(info.ganador.first); // O(log P)
               }
           }
 
           info.ganador.first = partido;
           info.ganador.second = info.partidos[partido];
 
-          //
-          if (resultado.count(info.ganador.first)) {
-              resultado[info.ganador.first] += info.compromisarios;
+          // 
+          if (resultado.count(info.ganador.first)) { // O(log P)
+              resultado[info.ganador.first] += info.compromisarios; // O(log P)
           }
           else {
-              resultado[info.ganador.first] = info.compromisarios;
+              resultado[info.ganador.first] = info.compromisarios; // O(log P)
 
           }
       }
      
   }
 
+  // coste O(1)
   string ganador_en(const string &estado) const {
     // Completar
-    const infoEstado& info = bucar_estado(estado);
+    const infoEstado& info = bucar_estado(estado); // O(1)
     return info.ganador.first;
   }
 
+  // coste: O(P)
   vector<pair<string,int>> resultados() const {
     // Completar
 
       vector<pair<string, int>> result;
 
-      
       for (const auto& [k, v] : resultado) {
           pair<string, int> aux;
           aux.first = k;
@@ -108,9 +115,9 @@ private:
  
     unordered_map<string, infoEstado> estados;
 
-    map<string, int> resultado;
+    map<string, int> resultado; // recuentos de los votos 
 
-
+    //coste:  O(1)
     infoEstado& bucar_estado(string const& estado) {
         auto it_estado = estados.find(estado);
         if (it_estado == estados.end()) {
@@ -119,6 +126,7 @@ private:
 
         return it_estado->second;
     }
+    //coste: O(1)
     const infoEstado& bucar_estado(string const& estado) const{
         auto it_estado = estados.find(estado);
         if (it_estado == estados.end()) {
