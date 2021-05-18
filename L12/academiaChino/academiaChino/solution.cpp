@@ -20,6 +20,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <algorithm>
 
@@ -28,47 +29,52 @@ using namespace std;
 class AcademiaChino {
 public:
   // Definiciones públicas ¡No olvides el coste!
-	AcademiaChino() : grupos(7) {}
 
+	//coste: O(N) siendo N el numero de grupos de la academia
+	AcademiaChino(int num_grupos) : grupos(num_grupos+1), num_grupos(num_grupos) {} // grupos(num_grupos+1) porque empieza en 1
+
+	//coste: O(1)
 	void nuevo_estudiante(string const& DNI, int const& grupo) {
 		if (estudiantes.count(DNI)) {
 			throw std::domain_error("Estudiante existente");
 		}
-		if (grupo < 1 || grupo > 6) {
+		if (grupo < 1 || grupo > num_grupos) {
 			throw std::domain_error("Grupo incorrecto");
 		}
 
-		grupos[grupo].push_front(DNI);
-		estudiantes[DNI].grupo = grupo;
-
-
+		grupos[grupo].push_front(DNI); // la cola
+		estudiantes[DNI].grupo = grupo; // unordermap
+		estudiantes[DNI].it_estudiante = grupos[grupo].begin(); // apuntamos
 	}
 
+	//coste: O(1)
 	void promocionar(string const& DNI) {
 		infoEstudiante& info = buscar_alumno(DNI);
-		
-		
-		int grupo_actual = info.grupo;
-		list<string>& cola = grupos[grupo_actual]; // seleccionamos el grupo
-		auto it = find(cola.begin(), cola.end(), DNI); // buscamos al estudiante
-
-		if (grupo_actual == 6 && !info.graduado) { // si se gradua
-			info.graduado = true;
-			grad[DNI].grupo= grupo_actual;
-			grad[DNI].graduado= true;
-
-		}
-		else if (info.graduado) {
+		if (info.graduado) {
 			throw std::domain_error("Estudiante ya graduado");
 		}
+	
+		int grupo_actual = info.grupo;
+		list<string>& cola = grupos[grupo_actual]; // seleccionamos el grupo
+		
+		//auto it = find(cola.begin(), cola.end(), DNI); // buscamos al estudiante
+		
+		if (grupo_actual == 6) { // si se gradua
+			grupos[info.grupo].erase(info.it_estudiante); // lo eliminamos de los grupos
+			grad[DNI].grupo = grupo_actual; // lo añadimos a los graduados
+			info.graduado = true;
+		}
+		
 		else {
-			cola.erase(it); // lo eliminamos de la cola
+			cola.erase(info.it_estudiante); // lo eliminamos de la cola
 			int nuevo_grupo = info.grupo += 1; // le pasamos de grupo
 			grupos[nuevo_grupo].push_front(DNI); // le metemos al nuevo grupo
+			info.it_estudiante = grupos[nuevo_grupo].begin(); // actualizamos
 		}
 
 	}
 
+	//coste: O(1)
 	 int grupo_estudiante(string const& DNI) const{
 		//devuelve el grupo del estudiante
 		const infoEstudiante& info = buscar_alumno(DNI);
@@ -79,17 +85,19 @@ public:
 
 	}
 
-	 vector<string> graduados() const{
-		vector<string> result;
-
+	 //coste: O(N) siendo N el numero de alumnos que se han graduado
+	 list<string> graduados() const{
+		list<string> result;
+		
 		for (const auto& [k, v] : grad) {
 			result.push_back(k);
 		}
 		return result;
 	}
-
-	string novato(int const& grupo) {
-		if (grupo < 1 || grupo > 6) {
+ 
+	//coste: O(1)
+	string novato(int const& grupo) const{
+		if (grupo < 1 || grupo > num_grupos) {
 			throw std::domain_error("Grupo incorrecto");
 		}
 		if (grupos[grupo].empty()) {
@@ -104,16 +112,19 @@ private:
 	struct infoEstudiante {
 		int grupo;
 		bool graduado;
+		list<string>::iterator it_estudiante;
 
 		infoEstudiante() : graduado(false) {}
 	};
 
 	vector<list<string>> grupos;
-	map<string, infoEstudiante> estudiantes; // dni, grupo
+
+	unordered_map<string, infoEstudiante> estudiantes; // dni, grupo
 
 	map<string, infoEstudiante> grad; // dni, grupo
+	int num_grupos;
 
-
+	//coste: O(1)
 	const infoEstudiante& buscar_alumno(string const& dni) const {
 		auto it_alumno = estudiantes.find(dni);
 		if (it_alumno == estudiantes.end()) {
@@ -122,6 +133,7 @@ private:
 		return it_alumno->second;
 	}
 
+	//coste: O(1)
 	infoEstudiante& buscar_alumno(string const& dni) {
 		auto it_alumno = estudiantes.find(dni);
 		if (it_alumno == estudiantes.end()) {
@@ -141,7 +153,7 @@ bool tratar_caso() {
 	string alumno;
 	int grupo;
 
-	AcademiaChino acad;
+	AcademiaChino acad(6);
 
 	while (operacion != "FIN") {
 		try
@@ -163,7 +175,7 @@ bool tratar_caso() {
 			}
 			else if (operacion == "graduados") {
 				
-				vector<string> result =acad.graduados();
+				list<string> result =acad.graduados();
 				cout << "Lista de graduados: ";
 				for (const string& alumno : result) {
 					cout << alumno << " ";
